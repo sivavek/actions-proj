@@ -26,4 +26,6 @@ jobs:
               run: flake8 modules/03_Python_Flask/
               continue-on-error: true
 
-              
+            - name: Run Tests
+              run: pytest modules/03_Python_Flask/test_app.py
+              continue-on-error: true

@@ -46,7 +46,6 @@ jobs:
                   echo "Dependency installation failed."
                 else
                   echo "Dependencies installed successfully."
-                  exit 1
                 fi
                 if [ "${{ steps.flake8_id.outcome }}" == "failure" ]; then
                   echo "Flake8 linting failed."
@@ -63,4 +62,3 @@ jobs:
                 else
                   echo "Render deployment succeeded."
                 fi
-                

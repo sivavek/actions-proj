@@ -29,3 +29,8 @@ jobs:
             - name: Run Tests
               run: pytest modules/03_Python_Flask/test_app.py
               continue-on-error: true
+
+            - name: Render deployment
+              run: |
+                curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+              continue-on-error: true

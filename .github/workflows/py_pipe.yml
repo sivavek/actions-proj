@@ -21,16 +21,46 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r modules/03_Python_Flask/requirements.txt
               continue-on-error: true
+              id: dependencies_id
 
             - name: Run Flake Linting
               run: flake8 modules/03_Python_Flask/
               continue-on-error: true
+              id: flake8_id
 
             - name: Run Tests
               run: pytest modules/03_Python_Flask/test_app.py
               continue-on-error: true
+              id: pytest_id
 
             - name: Render deployment
               run: |
                 curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
               continue-on-error: true
+              id: render_id
+
+            - name: Check success/failures
+              if: always()
+              run: |
+                if [ "${{ steps.dependencies_id.outcome }}" == "failure" ]; then
+                  echo "Dependency installation failed."
+                else
+                  echo "Dependencies installed successfully."
+                  exit 1
+                fi
+                if [ "${{ steps.flake8_id.outcome }}" == "failure" ]; then
+                  echo "Flake8 linting failed."
+                else
+                  echo "Flake8 linting passed."
+                fi
+                if [ "${{ steps.pytest_id.outcome }}" == "failure" ]; then
+                  echo "Pytest tests failed."
+                else
+                  echo "Pytest tests passed."
+                fi
+                if [ "${{ steps.render_id.outcome }}" == "failure" ]; then
+                  echo "Render deployment failed."
+                else
+                  echo "Render deployment succeeded."
+                fi
+                
